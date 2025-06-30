@@ -114,7 +114,12 @@ const menuItems: MenuItem[] = [
         type: 'item',
         label: 'Convert to mp4',
         onClick: handleModuleTypeSelect(ProcessingModuleType.videoConvert)
-      }
+      },
+      {
+        type: 'item',
+        label: 'Image to text output',
+        onClick: handleModuleTypeSelect(ProcessingModuleType.imageToText)
+      },
     ]
   }
 ]

@@ -32,4 +32,5 @@ export const MODULE_MAP: Record<ProcessingModuleType, ModuleHandler | null> = {
     [ProcessingModuleType.runPipeline]: runPipelineHandler,
     [ProcessingModuleType.videoConvert]: convertVideoHandler,
     [ProcessingModuleType.filenameSanitize]: fileSanitize,
+    [ProcessingModuleType.imageToText]: null,
 };

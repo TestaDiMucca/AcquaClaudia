@@ -13,6 +13,7 @@ import Branching from 'vue-material-design-icons/FamilyTree.vue';
 import Pipe from 'vue-material-design-icons/Pipe.vue';
 import VideoConvert from 'vue-material-design-icons/VideoSwitch.vue';
 import Sanitize from 'vue-material-design-icons/FormatClear.vue';
+import TextRecognition from 'vue-material-design-icons/TextRecognition.vue';
 
 import { ProcessingModuleType } from './types';
 import { VueComponent } from './util.types';
@@ -40,6 +41,7 @@ export const MODULE_ICONS: Record<ProcessingModuleType, string> = {
     [ProcessingModuleType.runPipeline]: '🪈',
     [ProcessingModuleType.videoConvert]: '📼',
     [ProcessingModuleType.filenameSanitize]: '🧼',
+    [ProcessingModuleType.imageToText]: '🖼️',
 };
 
 export const MODULE_LABEL: Record<ProcessingModuleType, string> = {
@@ -58,6 +60,7 @@ export const MODULE_LABEL: Record<ProcessingModuleType, string> = {
     [ProcessingModuleType.runPipeline]: 'Forward to Pipeline',
     [ProcessingModuleType.videoConvert]: 'Convert to mp4',
     [ProcessingModuleType.filenameSanitize]: 'Sanitize filename',
+    [ProcessingModuleType.imageToText]: 'Image to text',
 };
 
 /** Icon representation of the module operations */
@@ -77,6 +80,7 @@ export const MODULE_MATERIAL_ICONS: Record<ProcessingModuleType, VueComponent> =
     [ProcessingModuleType.runPipeline]: Pipe,
     [ProcessingModuleType.videoConvert]: VideoConvert,
     [ProcessingModuleType.filenameSanitize]: Sanitize,
+    [ProcessingModuleType.imageToText]: TextRecognition,
 };
 
 /**
@@ -100,12 +104,14 @@ export const OPTION_LABELS: Record<ProcessingModuleType, string | null> = {
     [ProcessingModuleType.runPipeline]: 'Target pipeline',
     [ProcessingModuleType.videoConvert]: '-',
     [ProcessingModuleType.filenameSanitize]: 'Replacement character',
+    [ProcessingModuleType.imageToText]: 'Text threshold',
 };
 
 export const OPTION_TOOLTIP: Partial<Record<ProcessingModuleType, string>> = {
     [ProcessingModuleType.compressVideo]: 'For quality, 0 CRF is lossless and 23 is "standard"',
     [ProcessingModuleType.iterate]: 'File will be outputted in the directory of the input files.',
     [ProcessingModuleType.ruleFilter]: 'Files passing the rule set will continue down the pipeline',
+    [ProcessingModuleType.imageToText]: 'Only outputs if number of words is above threshold',
 };
 
 export const getOptionsComponent = (moduleType: ProcessingModuleType) => {
