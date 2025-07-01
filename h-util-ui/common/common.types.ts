@@ -28,6 +28,8 @@ export type ProcessingModuleBooleanOptions = {
     skipPreviouslyFailed?: boolean;
     /** Inverts any boolean logic */
     inverse?: boolean;
+    /** Send a notification when this module completes */
+    notifyWhenDone?: boolean;
 };
 
 export type ProcessingBranch = {
@@ -49,6 +51,8 @@ export interface ActionModule extends BaseModule {
     type: Exclude<ProcessingModuleType, 'branch'>;
     options: ProcessingModuleBooleanOptions & {
         value: string | number;
+        output?: string;
+        threshold?: number;
         rules?: Rule;
         dateMask?: string;
     };

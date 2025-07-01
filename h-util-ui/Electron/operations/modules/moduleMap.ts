@@ -15,6 +15,7 @@ import ruleFilterHandler from './ruleFilter.handler';
 import runPipelineHandler from './runPipeline.handler';
 import convertVideoHandler from './convertVideo.handler';
 import fileSanitize from './fileSanitize.handler';
+import imageToTextHandler from './imageToText.handler';
 
 export const MODULE_MAP: Record<ProcessingModuleType, ModuleHandler | null> = {
     [ProcessingModuleType.datePrefix]: datePrefixHandler,
@@ -32,5 +33,5 @@ export const MODULE_MAP: Record<ProcessingModuleType, ModuleHandler | null> = {
     [ProcessingModuleType.runPipeline]: runPipelineHandler,
     [ProcessingModuleType.videoConvert]: convertVideoHandler,
     [ProcessingModuleType.filenameSanitize]: fileSanitize,
-    [ProcessingModuleType.imageToText]: null,
+    [ProcessingModuleType.imageToText]: imageToTextHandler,
 };
