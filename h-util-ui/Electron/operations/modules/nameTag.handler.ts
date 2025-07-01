@@ -31,6 +31,7 @@ const nameTagHandler: ModuleHandler = {
 
         if (!fileName) return;
 
+        /** Parsed from filename */
         const parsedTags = parseStringToTags(pattern, removeExt(fileName));
 
         if (!parsedTags) return;
@@ -38,8 +39,8 @@ const nameTagHandler: ModuleHandler = {
         await withUTimes(async () => {
             const readTags = (await ffMeta.readTags(filePath)) as TagReturnType;
             const existingTitle = readTags.format?.tags?.title || '';
-            const withMetaDataTitle = fileNameSafeTitleReplace(parsedTags.title, existingTitle);
-            parsedTags.title = withMetaDataTitle;
+            const unSafeTitleForTag = fileNameSafeTitleReplace(parsedTags.title, existingTitle);
+            parsedTags.title = unSafeTitleForTag;
 
             await ffMeta.writeTags(filePath, { ...parsedTags });
             await replaceFile(filePath, getTempName(filePath));

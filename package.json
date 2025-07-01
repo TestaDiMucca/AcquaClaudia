@@ -4,7 +4,7 @@
   "description": "Turns some common data operations into a CLI tool, to prevent needing various third party apps and utilities and configs. This includes:",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest ./h-util-ui",
     "build": "tsc --build --verbose",
     "build:common": "npm run build --workspace ./packages/common",
     "build:fileops": "npm run build --workspace ./packages/fileops"
