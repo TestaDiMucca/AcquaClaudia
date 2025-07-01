@@ -16,6 +16,7 @@ import runPipelineHandler from './runPipeline.handler';
 import convertVideoHandler from './convertVideo.handler';
 import fileSanitize from './fileSanitize.handler';
 import imageToTextHandler from './imageToText.handler';
+import deleteHandler from './delete.handler';
 
 export const MODULE_MAP: Record<ProcessingModuleType, ModuleHandler | null> = {
     [ProcessingModuleType.datePrefix]: datePrefixHandler,
@@ -34,4 +35,5 @@ export const MODULE_MAP: Record<ProcessingModuleType, ModuleHandler | null> = {
     [ProcessingModuleType.videoConvert]: convertVideoHandler,
     [ProcessingModuleType.filenameSanitize]: fileSanitize,
     [ProcessingModuleType.imageToText]: imageToTextHandler,
+    [ProcessingModuleType.delete]: deleteHandler,
 };

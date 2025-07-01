@@ -18,6 +18,7 @@ export enum ProcessingModuleType {
     videoConvert = 'Convert to mp4',
     filenameSanitize = 'Sanitize Filename',
     imageToText = 'Image to Text',
+    delete = 'Delete',
 }
 
 /** Options that work by switching on/off only */
@@ -30,6 +31,8 @@ export type ProcessingModuleBooleanOptions = {
     inverse?: boolean;
     /** Send a notification when this module completes */
     notifyWhenDone?: boolean;
+    /** Preserve original file instead of deleting */
+    preserveOriginal?: boolean;
 };
 
 export type ProcessingBranch = {

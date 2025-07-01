@@ -14,6 +14,7 @@ import Pipe from 'vue-material-design-icons/Pipe.vue';
 import VideoConvert from 'vue-material-design-icons/VideoSwitch.vue';
 import Sanitize from 'vue-material-design-icons/FormatClear.vue';
 import TextRecognition from 'vue-material-design-icons/TextRecognition.vue';
+import DeleteVariant from 'vue-material-design-icons/DeleteVariant.vue';
 
 import { ProcessingModuleType } from './types';
 import { VueComponent } from './util.types';
@@ -42,6 +43,7 @@ export const MODULE_ICONS: Record<ProcessingModuleType, string> = {
     [ProcessingModuleType.videoConvert]: '📼',
     [ProcessingModuleType.filenameSanitize]: '🧼',
     [ProcessingModuleType.imageToText]: '🖼️',
+    [ProcessingModuleType.delete]: '🗑️',
 };
 
 export const MODULE_LABEL: Record<ProcessingModuleType, string> = {
@@ -61,9 +63,13 @@ export const MODULE_LABEL: Record<ProcessingModuleType, string> = {
     [ProcessingModuleType.videoConvert]: 'Convert to mp4',
     [ProcessingModuleType.filenameSanitize]: 'Sanitize filename',
     [ProcessingModuleType.imageToText]: 'Image to text',
+    [ProcessingModuleType.delete]: 'Delete file',
 };
 
-/** Icon representation of the module operations */
+/**
+ * Icon representation of the module operations
+ * See: https://pictogrammers.com/library/mdi/
+ */
 export const MODULE_MATERIAL_ICONS: Record<ProcessingModuleType, VueComponent> = {
     [ProcessingModuleType.subfolder]: Folder,
     [ProcessingModuleType.compressImage]: FileImageMinus,
@@ -81,6 +87,7 @@ export const MODULE_MATERIAL_ICONS: Record<ProcessingModuleType, VueComponent> =
     [ProcessingModuleType.videoConvert]: VideoConvert,
     [ProcessingModuleType.filenameSanitize]: Sanitize,
     [ProcessingModuleType.imageToText]: TextRecognition,
+    [ProcessingModuleType.delete]: DeleteVariant,
 };
 
 /**
@@ -105,6 +112,7 @@ export const OPTION_LABELS: Record<ProcessingModuleType, string | null> = {
     [ProcessingModuleType.videoConvert]: '-',
     [ProcessingModuleType.filenameSanitize]: 'Replacement character',
     [ProcessingModuleType.imageToText]: 'Text threshold',
+    [ProcessingModuleType.delete]: null,
 };
 
 export const OPTION_TOOLTIP: Partial<Record<ProcessingModuleType, string>> = {
@@ -119,6 +127,7 @@ export const getOptionsComponent = (moduleType: ProcessingModuleType) => {
         case ProcessingModuleType.datePrefix:
         case ProcessingModuleType.metadata:
         case ProcessingModuleType.videoConvert:
+        case ProcessingModuleType.delete:
             return null;
         case ProcessingModuleType.report:
             return OptionsDirectory;

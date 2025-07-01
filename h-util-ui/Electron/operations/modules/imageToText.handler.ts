@@ -48,7 +48,7 @@ const imageToTextHandler: ModuleHandler = {
         const outputPath = path.join(path.dirname(fileWithMeta.filePath), outputName + '.' + DEFAULT_OUTPUT_FILETYPE);
 
         const header = `## File: ${fileName}\n\n`;
-        const content = header + wordsWithHighConfidence.map((w) => w.text).join(' ') + '\n';
+        const content = header + wordsWithHighConfidence.map((w) => w.text).join(' ') + '\n\n';
 
         try {
             await fs.appendFile(outputPath, content, { flag: 'a' });
