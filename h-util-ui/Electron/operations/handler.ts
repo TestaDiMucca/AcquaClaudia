@@ -6,6 +6,7 @@ import {
     ProcessingModule,
     ProcessingModuleType,
     ProcessingRequest,
+    ProcessingSortOption,
 } from '@shared/common.types';
 import { ProcessingError } from '@util/errors';
 import { addStat, sendFeLog, updateTaskProgress } from '@util/ipc';
@@ -15,6 +16,7 @@ import { MODULE_MAP } from './modules/moduleMap';
 import branchingHandler from './modules/branching.handler';
 
 let globalTaskId = 0;
+/** Max number of modules to process, to protect against looping */
 const MAX_MODULE_LENGTH = 100;
 
 /** Top level does not know what this is. Gives modules places to store data. */
@@ -58,7 +60,9 @@ export const runPipelineForFiles = async (params: ProcessingRequest) => {
     let handled = 0;
     let progress = 0;
 
-    const fileOptions: FileOptions = fileListToFileOptions(filePaths);
+    const fileOptions: FileOptions = fileListToFileOptions(
+        pipeline.sortOption === ProcessingSortOption.alphabetical ? filePaths.sort() : filePaths,
+    );
 
     const modulesById = pipeline.processingModules.reduce<Record<string, ProcessingModule>>((a, v) => {
         a[v.id] = v;
