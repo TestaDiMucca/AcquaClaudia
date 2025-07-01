@@ -8,7 +8,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const letter = computed(() => props.task.pipelineName[0] ?? '?')
+const letter = computed<string>(() => props.task.pipelineName[0] ?? '?')
 </script>
 
 <template>
@@ -18,8 +18,8 @@ const letter = computed(() => props.task.pipelineName[0] ?? '?')
         <q-circular-progress show-value :value="task.progress" size="24px" :thickness="0.5" track-color="grey-8">
           <span>{{ letter }}</span>
         </q-circular-progress>
-        <q-circular-progress v-if="!!task.subProgress" show-value :value="task.subProgress ?? 0" size="12px"
-          :thickness="0.8" track-color="grey-8" class="mini-spinner" />
+        <q-circular-progress v-if="!!task.subProgress" :value="task.subProgress ?? 0" size="12px" :thickness="0.8"
+          track-color="grey-8" class="mini-spinner" />
       </div>
     </q-item-section>
     <q-item-section class="task-info">
