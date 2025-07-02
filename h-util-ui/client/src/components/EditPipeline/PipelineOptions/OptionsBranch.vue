@@ -4,7 +4,7 @@ import { Rule } from '@shared/rules.types';
 import { useToggle } from '@utils/composables/useToggle';
 import RuleEditor from 'src/components/common/RuleEditor.vue';
 import RuleViewer from 'src/components/common/RuleViewer.vue';
-import { computed, inject, Ref, ref } from 'vue';
+import { computed, inject, Ref } from 'vue';
 
 type Props = {
   moduleId: string;
@@ -32,11 +32,15 @@ const handleModuleUpdate = (opt) => {
   emit('update', { targetModule: opt.value })
 }
 
-// todo: "new module", and "none", and optimize
-const moduleOptions = computed(() => (pipelineModules?.value ?? []).filter(m => m.id !== props.moduleId).map(m => ({
-  label: m.type,
-  value: m.id
-})))
+const moduleOptions = computed(() =>
+  (pipelineModules?.value ?? []).reduce((acc, m) => {
+    if (m.id !== props.moduleId) {
+      acc.push({ label: m.type, value: m.id });
+    }
+
+    return acc;
+  }, [] as SelectItem[])
+)
 
 const currentSelectedModule = computed(() => moduleOptions.value.find(o => o.value === props.branch.targetModule))
 
