@@ -35,6 +35,11 @@ export type ProcessingBranch = {
     targetModule?: string;
 };
 
+export enum ProcessingSortOption {
+    none = 'none',
+    alphabetical = 'alphabetical',
+}
+
 interface BaseModule {
     id: string;
 }
@@ -69,6 +74,7 @@ export type Pipeline = {
     color?: string;
     /** Supplemented on load. todo: take out of this type */
     timesRan?: number;
+    sortOption?: ProcessingSortOption;
 };
 
 export type Storage = {
