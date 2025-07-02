@@ -7,6 +7,7 @@
 };
 import sqlite3InitModule, { Database, type Sqlite3Static } from '@sqlite.org/sqlite-wasm';
 import { tablesSql } from './tables.sql';
+import { rowMigrations } from './rowMigrations';
 
 const DEFAULT_DATABASE = '/hUtil-fe.sqlite3';
 
@@ -44,11 +45,27 @@ export const queryDatabase = {
     selectObj: <T>(sql: string, values?: any[]) => database!.selectObjects(sql, values) as T[],
 };
 
+const checkColumn = async (tableName: string, column: string, columnType: string = 'TEXT') => {
+    const sql = `PRAGMA table_info(${tableName})`;
+    const existingColumns = queryDatabase.selectObj<{ name: string }>(sql);
+    const existingColumnNames = new Set(existingColumns.map((col) => col.name));
+    if (!existingColumnNames.has(column)) {
+        const alterTableSql = `ALTER TABLE ${tableName} ADD COLUMN ${column} ${columnType}`;
+        console.log(`[sqlite] Adding column ${column} to table ${tableName}`);
+        await queryDatabase.run<void>(alterTableSql);
+    }
+};
+
 const initDbIfNeeded = async () => {
     try {
         for (let i = 0; i < tablesSql.length; i++) {
             const sql = tablesSql[i];
             queryDatabase.run<void>(sql);
+        }
+
+        for (const migration of rowMigrations) {
+            const { table, column, type } = migration;
+            checkColumn(table, column, type);
         }
     } catch (e) {
         console.error(`[sqlite] Error initializing db`, e);

@@ -16,6 +16,8 @@ import EditPipelineTopologyModule from './Topology/EditPipelineTopologyModule.vu
 import EditPipelineNewModule from './Topology/EditPipelineNewModule.vue';
 import { getDefaultModule } from '@utils/models.helpers';
 import { models } from 'src/data/models';
+import { ProcessingSortOption } from '@shared/common.types';
+import EditPipelineSortOption from './PipelineOptions/EditPipelineSortOption.vue';
 
 const pipelineModules = ref<ProcessingModule[]>([
   getDefaultModule(uuidv4())
@@ -25,6 +27,7 @@ const pipelineName = ref(`Nova fistula ${new Date().toISOString()}`);
 const pipelineColor = ref<string>();
 const pipelineRanking = ref(DEFAULT_RANKING);
 const pipelineId = ref<string>();
+const pipelineSort = ref<ProcessingSortOption>(ProcessingSortOption.none);
 
 onBeforeMount(() => {
   const selected = store.state.selectedPipeline;
@@ -35,6 +38,7 @@ onBeforeMount(() => {
   pipelineColor.value = selected.color;
   pipelineRanking.value = selected.manualRanking ?? DEFAULT_RANKING;
   pipelineId.value = selected.id;
+  pipelineSort.value = selected.sortOption ?? ProcessingSortOption.none;
 })
 
 provide('pipelineModules', pipelineModules);
@@ -79,7 +83,8 @@ const handleSavePipeline = () => {
     name: pipelineName.value,
     manualRanking: pipelineRanking.value,
     color: pipelineColor.value,
-    processingModules: pipelineModules.value
+    processingModules: pipelineModules.value,
+    sortOption: pipelineSort.value,
   })
 
   store.syncPipelineDataFromStorage();
@@ -103,6 +108,10 @@ const handlePipelineRankingUpdated = (event: Event) => {
   pipelineRanking.value = +newValue;
 }
 
+const handlePipelineSortUpdated = (sortOption: ProcessingSortOption) => {
+  pipelineSort.value = sortOption;
+}
+
 const hasNoModules = computed(() => pipelineModules.value.length === 0);
 const header = computed(() => !!store.state.selectedPipeline ? 'Edit pipeline' : 'New pipeline');
 
@@ -120,6 +129,7 @@ const vueFlowTopology = computed(() => buildPipelineTopology(pipelineModules.val
           @input="handlePipelineNameUpdated" />
         <q-input type="number" class="number-input input-field" label="Pipeline rank" v-model="pipelineRanking"
           @input="handlePipelineRankingUpdated" />
+        <EditPipelineSortOption class="dropdown" :value="pipelineSort" @select="handlePipelineSortUpdated" />
         <q-input v-model="pipelineColor" :rules="pipelineColor === '' ? [] : ['anyColor']" label="Display color"
           class="color-input" no-error-icon>
           <template v-slot:append>

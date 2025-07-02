@@ -7,6 +7,7 @@ import { watch } from 'vue';
 interface Props {
   onDrop: (fileList: string[]) => void;
   onDragActiveChange?: (active: boolean) => void;
+  disabled?: boolean;
 };
 const props = defineProps<Props>();
 
@@ -18,7 +19,7 @@ const onDrop: FileUploadOptions['onDrop'] = (acceptFiles: ElectronFile[], _rejec
   }
 }
 
-const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, disabled: props.disabled });
 
 watch(isDragActive, () => {
   props.onDragActiveChange?.(isDragActive.value);

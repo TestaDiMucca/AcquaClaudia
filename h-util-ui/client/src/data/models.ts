@@ -1,16 +1,17 @@
-import { Aqueduct, Pipeline, PipelineStats, PipelineStatsPayload } from '@shared/common.types';
+import { Aqueduct, Pipeline, PipelineStats, PipelineStatsPayload, ProcessingSortOption } from '@shared/common.types';
 import { queryDatabase } from './sqlite';
 import { DEFAULT_RANKING } from '@utils/constants';
 
 export const pipeline = {
     upsert: (payload: Pipeline) => {
         const pipelineQuery = `--sql
-          INSERT INTO Pipeline (uuid, name, color, manual_ranking)
-          VALUES (?, ?, ?, ?)
+          INSERT INTO Pipeline (uuid, name, color, manual_ranking, sort_option)
+          VALUES (?, ?, ?, ?, ?)
           ON CONFLICT(uuid) DO UPDATE SET
             name = excluded.name,
             color = excluded.color,
             manual_ranking = excluded.manual_ranking,
+            sort_option = excluded.sort_option,
             modified = CURRENT_TIMESTAMP;
         `;
         queryDatabase.run(pipelineQuery, [
@@ -18,6 +19,7 @@ export const pipeline = {
             payload.name,
             payload.color,
             payload.manualRanking ?? DEFAULT_RANKING,
+            payload.sortOption ?? ProcessingSortOption.none,
         ]);
 
         const pipelineIdQuery = `SELECT id FROM Pipeline WHERE uuid = ?`;
@@ -57,6 +59,7 @@ export const pipeline = {
             p.modified AS "pipelineModified",
             p.color AS "pipelineColor",
             p.manual_ranking AS "pipelineManualRanking",
+            p.sort_option AS "pipelineSortOption",
             m.uuid AS "moduleId",
             m.data AS "moduleData"
           FROM Module m
@@ -71,6 +74,7 @@ export const pipeline = {
             pipelineModified: string;
             pipelineColor?: string;
             pipelineManualRanking?: number;
+            pipelineSortOption?: ProcessingSortOption;
             moduleId: string;
             moduleData: string;
         }>(pipelineFetchSql);
@@ -81,6 +85,9 @@ export const pipeline = {
                     name: row.pipelineName,
                     modified: row.pipelineModified,
                     created: row.pipelineCreated,
+                    color: row.pipelineColor,
+                    manualRanking: row.pipelineManualRanking ?? DEFAULT_RANKING,
+                    sortOption: row.pipelineSortOption ?? ProcessingSortOption.none,
                     id: row.pipelineId,
                     processingModules: [],
                 };
