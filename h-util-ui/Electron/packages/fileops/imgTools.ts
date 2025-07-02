@@ -8,7 +8,7 @@ import { ExifResult } from './types';
 export const compressToLevel = async (
     filePath: string,
     quality: number,
-    onProgress: (label: string, progress: number) => void
+    onProgress: (label: string, progress: number) => void,
 ) => {
     onProgress('reading image', 10);
     const img = await Jimp.read(filePath);
@@ -48,7 +48,8 @@ export const getExif = (image: string): Promise<Date | null> =>
         });
     });
 
-export const extractText = async (filePath: string) => Tesseract.recognize(filePath, 'eng');
+export const extractText = async (filePath: string): Promise<Tesseract.RecognizeResult> =>
+    Tesseract.recognize(filePath, 'eng');
 
 export const searchForTextInImage = async (filePath: string, matches: string[]) => {
     const extracted = await extractText(filePath);

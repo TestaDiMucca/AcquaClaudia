@@ -13,29 +13,38 @@ const handleModuleTypeSelect = (type: ProcessingModuleType) => () => props.handl
 const menuItems: MenuItem[] = [
   {
     type: 'item',
-    label: 'Place in directory',
-    onClick: handleModuleTypeSelect(ProcessingModuleType.subfolder)
-  },
-  {
-    type: 'separator'
-  },
-  {
-    type: 'item',
-    label: 'Dynamic renaming',
-    onClick: handleModuleTypeSelect(ProcessingModuleType.dynamicRename)
-  },
-  {
-    type: 'item',
-    label: 'Sanitize filename',
-    onClick: handleModuleTypeSelect(ProcessingModuleType.filenameSanitize)
-  },
-  { type: 'separator' },
-  {
-    type: 'item',
     label: 'Log results',
     onClick: handleModuleTypeSelect(ProcessingModuleType.report)
   },
-
+  {
+    type: 'group',
+    label: 'File management',
+    items: [
+      {
+        type: 'item',
+        label: 'Dynamic renaming',
+        onClick: handleModuleTypeSelect(ProcessingModuleType.dynamicRename)
+      },
+      {
+        type: 'separator'
+      },
+      {
+        type: 'item',
+        label: 'Sanitize filename',
+        onClick: handleModuleTypeSelect(ProcessingModuleType.filenameSanitize)
+      },
+      {
+        type: 'item',
+        label: 'Place in directory',
+        onClick: handleModuleTypeSelect(ProcessingModuleType.subfolder)
+      },
+      {
+        type: 'item',
+        label: 'Delete file',
+        onClick: handleModuleTypeSelect(ProcessingModuleType.delete)
+      },
+    ]
+  },
   {
     type: 'group',
     label: 'Flow control',
@@ -114,7 +123,12 @@ const menuItems: MenuItem[] = [
         type: 'item',
         label: 'Convert to mp4',
         onClick: handleModuleTypeSelect(ProcessingModuleType.videoConvert)
-      }
+      },
+      {
+        type: 'item',
+        label: 'Image to text output',
+        onClick: handleModuleTypeSelect(ProcessingModuleType.imageToText)
+      },
     ]
   }
 ]

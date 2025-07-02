@@ -1,6 +1,6 @@
 import { Rule } from './rules.types';
 
-/** Do not modify the copy here; they shouldn't be user facing anymore */
+/** Don't modify the copy here for UI; they shouldn't be user facing anymore */
 export enum ProcessingModuleType {
     datePrefix = 'Date Prefix',
     metadata = 'Metadata Tagging',
@@ -17,6 +17,8 @@ export enum ProcessingModuleType {
     runPipeline = 'runPipeline',
     videoConvert = 'Convert to mp4',
     filenameSanitize = 'Sanitize Filename',
+    imageToText = 'Image to Text',
+    delete = 'Delete',
 }
 
 /** Options that work by switching on/off only */
@@ -27,6 +29,10 @@ export type ProcessingModuleBooleanOptions = {
     skipPreviouslyFailed?: boolean;
     /** Inverts any boolean logic */
     inverse?: boolean;
+    /** Send a notification when this module completes */
+    notifyWhenDone?: boolean;
+    /** Preserve original file instead of deleting */
+    preserveOriginal?: boolean;
 };
 
 export type ProcessingBranch = {
@@ -53,6 +59,8 @@ export interface ActionModule extends BaseModule {
     type: Exclude<ProcessingModuleType, 'branch'>;
     options: ProcessingModuleBooleanOptions & {
         value: string | number;
+        output?: string;
+        threshold?: number;
         rules?: Rule;
         dateMask?: string;
     };
