@@ -12,8 +12,13 @@ declare module 'vue-material-design-icons/*.vue' {
     export default IconVue;
 }
 
+type SelectItem = {
+    label: string;
+    value: string;
+};
+
 /**
- * Template types actually have types, we can't import then here.
+ * Template types actually have types, we can't import them here.
  */
 type IpcRendererExposed = {
     send: <T>(channel: string, data: T[]) => void;

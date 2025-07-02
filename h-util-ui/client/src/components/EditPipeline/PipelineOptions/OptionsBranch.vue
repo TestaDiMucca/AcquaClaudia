@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ProcessingBranch, ProcessingModule } from '@shared/common.types';
 import { Rule } from '@shared/rules.types';
+import { useToggle } from '@utils/composables/useToggle';
 import RuleEditor from 'src/components/common/RuleEditor.vue';
+import RuleViewer from 'src/components/common/RuleViewer.vue';
 import { computed, inject, Ref } from 'vue';
 
 type Props = {
@@ -30,14 +32,19 @@ const handleModuleUpdate = (opt) => {
   emit('update', { targetModule: opt.value })
 }
 
-// todo: "new module", and "none", and optimize
-const moduleOptions = computed(() => (pipelineModules?.value ?? []).filter(m => m.id !== props.moduleId).map(m => ({
-  label: m.type,
-  value: m.id
-})))
+const moduleOptions = computed(() =>
+  (pipelineModules?.value ?? []).reduce((acc, m) => {
+    if (m.id !== props.moduleId) {
+      acc.push({ label: m.type, value: m.id });
+    }
+
+    return acc;
+  }, [] as SelectItem[])
+)
 
 const currentSelectedModule = computed(() => moduleOptions.value.find(o => o.value === props.branch.targetModule))
 
+const [expanded, toggleExpanded] = useToggle(true);
 </script>
 
 <template>
@@ -48,15 +55,15 @@ const currentSelectedModule = computed(() => moduleOptions.value.find(o => o.val
       <q-select v-if="moduleOptions.length > 0" class="option" :model-value="currentSelectedModule"
         :options="moduleOptions" @update:model-value="handleModuleUpdate" :hide-dropdown-icon="true"
         label="To existing module" />
+      <div v-if="!moduleOptions.length" class="no-branch-targets">
+        <span>No target modules</span>
+      </div>
     </div>
-    <q-expansion-item expand-separator label="Rules" :hide-expand-icon="true">
-      <template v-slot:header="{ expanded }">
-        <q-item-section>
-          {{ expanded ? 'Collapse' : 'Expand' }} rules
-        </q-item-section>
-      </template>
-      <RuleEditor :rule="branch.rules" @update-rule="handleRuleUpdates" />
-    </q-expansion-item>
+    <div class="rule-option">
+      <q-btn class="expansion-btn" @click="toggleExpanded">{{ expanded ? 'Collapse rules' : 'Expand rules' }}</q-btn>
+      <RuleEditor v-if="expanded" :rule="branch.rules" @update-rule="handleRuleUpdates" />
+      <RuleViewer v-else :rule="branch.rules" />
+    </div>
   </section>
 </template>
 
@@ -74,5 +81,19 @@ const currentSelectedModule = computed(() => moduleOptions.value.find(o => o.val
 
 .branch-container {
   padding: 0.5em;
+}
+
+.no-branch-targets {
+  color: var(--text-color-secondary);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  padding-left: 1em;
+}
+
+.expansion-btn {
+  margin-left: 1em;
+  margin-top: 5px;
+  ;
 }
 </style>

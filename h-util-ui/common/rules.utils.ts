@@ -49,10 +49,6 @@ export function evaluateBasicRule<T extends string = string>(
                   ? new Date(rule.value)
                   : rule.value;
 
-        //   if (rule.attribute === ExtraData.ocr) {
-        //     const result = await searchForTextInImage(data.filePath, [rule.value]);
-        //   }
-
         switch (rule.operator) {
             case Operator.eq:
                 return value === castRuleValue;
@@ -117,4 +113,8 @@ export const crawlRules = (rules: Rule, callback: (basicRule: BasicRule) => void
     } else {
         rules.rules.forEach((rule) => crawlRules(rule, callback));
     }
+};
+
+export const isGroupedRule = (rule: Rule): rule is LogicalGroup => {
+    return rule.type === 'AND' || rule.type === 'OR';
 };
