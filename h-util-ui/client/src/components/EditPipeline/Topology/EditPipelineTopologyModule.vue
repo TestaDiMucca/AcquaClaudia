@@ -3,7 +3,6 @@ import { ProcessingModule, ProcessingModuleType } from '@shared/common.types';
 import { computed, ref } from 'vue';
 import EditPipelineModule from '../EditPipelineModule.vue';
 import { MODULE_MATERIAL_ICONS } from '@utils/constants';
-import EditBranchingModule from '../PipelineOptions/EditBranchingModule.vue';
 
 const props = defineProps<{
   processingModule: ProcessingModule;
