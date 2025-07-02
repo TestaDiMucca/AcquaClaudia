@@ -1,6 +1,7 @@
 import dateFormat from 'dateformat';
 import { defaultTimeMask, ExtraData, RenameTemplates } from './common.constants';
 import { AttributeType } from './rules.types';
+import { BranchingModule, ProcessingModule, ProcessingModuleType } from './common.types';
 
 /** Just gets a default date time stamp */
 export function formatDate(date: Date): string {
@@ -53,4 +54,8 @@ export const getAttributeDataType = (attribute: RenameTemplates | ExtraData) => 
         default:
             return AttributeType.string;
     }
+};
+
+export const isBranchingModule = (processingModule: ProcessingModule): processingModule is BranchingModule => {
+    return processingModule.type === ProcessingModuleType.branch;
 };

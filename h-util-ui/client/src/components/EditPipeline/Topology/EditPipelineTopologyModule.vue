@@ -3,6 +3,7 @@ import { ProcessingModule, ProcessingModuleType } from '@shared/common.types';
 import { computed, ref } from 'vue';
 import EditPipelineModule from '../EditPipelineModule.vue';
 import { MODULE_MATERIAL_ICONS } from '@utils/constants';
+import EditPipelineTopologyModuleTooltip from './EditPipelineTopologyModuleTooltip.vue';
 
 const props = defineProps<{
   processingModule: ProcessingModule;
@@ -21,6 +22,9 @@ const closeEditor = () => {
   <div class="module-node">
     <span>
       <component :is="iconSignifier" />
+      <q-tooltip anchor="center right">
+        <EditPipelineTopologyModuleTooltip :processing-module="processingModule" />
+      </q-tooltip>
       <span class="title">{{ processingModule.type }}</span>
     </span>
 
