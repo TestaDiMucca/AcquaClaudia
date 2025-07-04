@@ -41,6 +41,7 @@ const nameTagHandler: ModuleHandler = {
             const existingTitle = readTags.format?.tags?.title || '';
             const unSafeTitleForTag = fileNameSafeTitleReplace(parsedTags.title, existingTitle);
             parsedTags.title = unSafeTitleForTag;
+            parsedTags.artist = fileNameSafeTitleReplace(parsedTags.artist, readTags.format?.tags?.artist || '');
 
             await ffMeta.writeTags(filePath, { ...parsedTags });
             await replaceFile(filePath, getTempName(filePath));
