@@ -61,10 +61,12 @@ export const pipeline = {
             p.manual_ranking AS "pipelineManualRanking",
             p.sort_option AS "pipelineSortOption",
             m.uuid AS "moduleId",
-            m.data AS "moduleData"
+            m.data AS "moduleData",
+            ps.times_ran AS "timesRan"
           FROM Module m
           JOIN PipelineModule pm ON m.id = pm.module_id
-          JOIN Pipeline p ON p.id  = pm.pipeline_id;
+          JOIN Pipeline p ON p.id = pm.pipeline_id
+          LEFT JOIN PipelineStats ps ON ps.pipeline_id = p.id;
         `;
 
         const rows = queryDatabase.selectObj<{
@@ -77,6 +79,7 @@ export const pipeline = {
             pipelineSortOption?: ProcessingSortOption;
             moduleId: string;
             moduleData: string;
+            timesRan: number;
         }>(pipelineFetchSql);
 
         return rows.reduce<Record<string, Pipeline>>((a, row) => {
@@ -90,6 +93,7 @@ export const pipeline = {
                     sortOption: row.pipelineSortOption ?? ProcessingSortOption.none,
                     id: row.pipelineId,
                     processingModules: [],
+                    timesRan: row.timesRan ?? 0,
                 };
 
             a[row.pipelineId].processingModules.push(JSON.parse(row.moduleData));
