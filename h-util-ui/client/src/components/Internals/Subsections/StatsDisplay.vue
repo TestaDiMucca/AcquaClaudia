@@ -15,13 +15,13 @@ const totalFiles = computed(() => stats.reduce((a, v) => a + v.filesProcessed, 0
 </script>
 
 <template>
-  <h4>Pipeline invocations</h4>
+  <b>Pipeline invocations</b>
   <div class="pipeline-stats">
     <div v-for="pipeline in pipelineRunData">
       {{ pipeline.pipelineName }} : {{ pipeline.timesRan }}
     </div>
   </div>
-  <h4>Other</h4>
+  <b>Other</b>
   <div>
     Time spent processing: {{ formatMilliseconds(totalTime) }}
   </div>
