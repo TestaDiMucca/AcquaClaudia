@@ -49,6 +49,11 @@ defineProps<{
       </q-card-section>
 
       <q-card-section v-if="tab === Tabs.usage">
+        Primary functions:
+        <ul>
+          <li>Pipelines: Define a series of processing steps for your files</li>
+          <li>Aqueducts: Attach a pipeline to a specified directory for routine jobs on files present</li>
+        </ul>
         Notes on some of the trickier modules and their usage:
         <ul>
           <li>Filter modules: filter files from rest of the pipeline</li>
