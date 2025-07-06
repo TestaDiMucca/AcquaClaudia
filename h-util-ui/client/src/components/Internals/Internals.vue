@@ -6,6 +6,7 @@ import store from '@utils/store';
 import InternalsCards from './InternalsCards.vue';
 import { watch } from 'vue';
 import { useQuasar } from 'quasar'
+import StatsWrapper from './Subsections/StatsWrapper.vue';
 
 const handleChangeCardStyle = store.setCardStyles;
 const $q = useQuasar();
@@ -34,6 +35,14 @@ watch(() => store.state.settings.darkMode, () => {
 
             <q-toggle :model-value="store.state.settings.darkMode" @update:model-value="store.toggleDarkMode"
               label="Dark mode" />
+          </template>
+        </InternalsCards>
+        <InternalsCards>
+          <template #headers>
+            Stats
+          </template>
+          <template #content>
+            <StatsWrapper />
           </template>
         </InternalsCards>
         <InternalsCards>
