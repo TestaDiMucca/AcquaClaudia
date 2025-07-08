@@ -28,7 +28,7 @@ const onDragActiveChange = (active: boolean) => {
   isDragActive.value = active;
 }
 
-const vueFlowTopology = computed(() => buildPipelineTopology(props.pipelineItem.processingModules));
+const vueFlowTopology = computed(() => buildPipelineTopology(props.pipelineItem.processingModules, { direction: 'LR', compact: true }));
 </script>
 
 <template>
@@ -50,13 +50,13 @@ const vueFlowTopology = computed(() => buildPipelineTopology(props.pipelineItem.
           <Background />
           <template #node-default="props: NodeProps<ChartNodeData>">
             <component :is="MODULE_MATERIAL_ICONS[props.data.pipelineModule!.type] ?? UnknownModule"
-              :class="{ 'unknown-module': hasUnknownModule }" />
+              :class="{ 'unknown-module': hasUnknownModule, 'icon-node': true }" />
             <q-tooltip :delay="500" :offset="[0, 10]">{{ props.data.pipelineModule!.type }}</q-tooltip>
           </template>
 
           <template #node-branch="props: NodeProps<ChartNodeData>">
             <component :is="MODULE_MATERIAL_ICONS[props.data.pipelineModule!.type] ?? UnknownModule"
-              :class="{ 'unknown-module': hasUnknownModule }" />
+              :class="{ 'unknown-module': hasUnknownModule, 'icon-node': true }" />
           </template>
 
           <template #node-new="props: NodeProps<ChartNodeData>">
@@ -128,5 +128,11 @@ const vueFlowTopology = computed(() => buildPipelineTopology(props.pipelineItem.
 .vue-flow-container {
   width: 100%;
   height: 10em;
+}
+
+.icon-node {
+  width: 50px !important;
+  background-color: transparent !important;
+  color: #fff;
 }
 </style>
