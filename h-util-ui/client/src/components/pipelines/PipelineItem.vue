@@ -5,6 +5,7 @@ import { getIpcRenderer } from '@utils/helpers';
 import PipelineCardStandard from './ItemCards/PipelineCardStandard.vue';
 import { CardStyles } from './pipelineGallery.helpers';
 import PipelineCardCompact from './ItemCards/PipelineCardCompact.vue';
+import PipelineCardTopology from './ItemCards/PipelineCardTopology.vue';
 
 interface Props {
   pipelineItem: Pipeline;
@@ -33,5 +34,6 @@ const onDrop = (filePaths: string[]) => {
 
 <template>
   <PipelineCardCompact v-if="cardStyle === CardStyles.compact" :onDrop="onDrop" :pipelineItem="pipelineItem" />
+  <PipelineCardTopology v-if="cardStyle === CardStyles.topologies" :onDrop="onDrop" :pipelineItem="pipelineItem" />
   <PipelineCardStandard v-else :onDrop="onDrop" :pipelineItem="pipelineItem" />
 </template>

@@ -18,11 +18,20 @@ type ChartLink = Edge;
 
 type UnPositionedChartNode = Omit<ChartNode, 'position'>;
 
+type BuildPipelineTopologyOptions = {
+    direction?: 'TB' | 'LR';
+    compact?: boolean;
+};
+
 /**
  * Modules are stored in a pseudo-linked-list and need to be transformed
  * into a format vue-flow can interpret
  */
-export const buildPipelineTopology = (pipelineModules: ProcessingModule[]) => {
+export const buildPipelineTopology = (
+    pipelineModules: ProcessingModule[],
+    options: BuildPipelineTopologyOptions = {},
+) => {
+    const direction = options.direction ?? 'TB';
     const nodes: UnPositionedChartNode[] = [];
     const links: ChartLink[] = [];
     const validNodeIds = new Set<string>(pipelineModules.map((m) => m.id));
@@ -37,7 +46,7 @@ export const buildPipelineTopology = (pipelineModules: ProcessingModule[]) => {
                 branchIndex,
             },
             type: 'new',
-            targetPosition: Position.Top,
+            targetPosition: direction === 'TB' ? Position.Top : Position.Left,
         });
 
         links.push({
@@ -57,7 +66,13 @@ export const buildPipelineTopology = (pipelineModules: ProcessingModule[]) => {
                 label: pipelineModule.type,
                 pipelineModule,
             },
+            style: {
+                width: options.compact ? '50px' : undefined,
+                backgroundColor: options.compact ? 'transparent' : '#fff',
+            },
             type: 'default',
+            targetPosition: direction === 'TB' ? Position.Top : Position.Left,
+            sourcePosition: direction === 'TB' ? Position.Bottom : Position.Right,
         });
 
         if (pipelineModule.type === ProcessingModuleType.branch) {
@@ -99,7 +114,7 @@ export const buildPipelineTopology = (pipelineModules: ProcessingModule[]) => {
     });
 
     return {
-        nodes: calculateDagreLayout(nodes, links),
+        nodes: calculateDagreLayout(nodes, links, options),
         links,
     };
 };
@@ -107,15 +122,15 @@ export const buildPipelineTopology = (pipelineModules: ProcessingModule[]) => {
 const calculateDagreLayout = (
     nodes: UnPositionedChartNode[],
     edges: ChartLink[],
-    direction: 'TB' | 'LR' = 'TB',
+    options: BuildPipelineTopologyOptions = {},
 ): ChartNode[] => {
     const g = new dagre.graphlib.Graph();
 
-    g.setGraph({ rankdir: direction });
+    g.setGraph({ rankdir: options.direction ?? 'TB' });
     g.setDefaultEdgeLabel(() => ({}));
 
     nodes.forEach((node) => {
-        g.setNode(node.id, { width: 120, height: 50 });
+        g.setNode(node.id, { width: options?.compact ? 50 : 120, height: 50 });
     });
 
     edges.forEach((edge) => {

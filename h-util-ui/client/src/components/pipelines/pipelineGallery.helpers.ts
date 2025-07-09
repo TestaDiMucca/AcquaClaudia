@@ -19,6 +19,7 @@ export enum CardStyles {
     // swatch = 'swatch',
     compact = 'Compact',
     // detailed = 'detailed',
+    topologies = 'Topologies',
 }
 
 const SORT_BY_MAP: Record<SortBy, keyof Pipeline> = {
