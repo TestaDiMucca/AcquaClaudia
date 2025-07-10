@@ -34,6 +34,6 @@ const onDrop = (filePaths: string[]) => {
 
 <template>
   <PipelineCardCompact v-if="cardStyle === CardStyles.compact" :onDrop="onDrop" :pipelineItem="pipelineItem" />
-  <PipelineCardTopology v-if="cardStyle === CardStyles.topologies" :onDrop="onDrop" :pipelineItem="pipelineItem" />
+  <PipelineCardTopology v-else-if="cardStyle === CardStyles.topologies" :onDrop="onDrop" :pipelineItem="pipelineItem" />
   <PipelineCardStandard v-else :onDrop="onDrop" :pipelineItem="pipelineItem" />
 </template>
