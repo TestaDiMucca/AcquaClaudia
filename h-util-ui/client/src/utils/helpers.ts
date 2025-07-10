@@ -48,7 +48,6 @@ export const saveUserData = (pipelines: VueStore['pipelines']) => {
     });
 };
 
-// todo: GH Issue #69
 export const sortObjects = <T extends Record<string, any>>(list: T[], key: keyof T, ascending: boolean = true): T[] => {
     return [
         ...list.sort((a, b) => {
@@ -63,7 +62,6 @@ export const sortObjects = <T extends Record<string, any>>(list: T[], key: keyof
     ];
 };
 
-// todo: GH Issue #69
 export const formatMilliseconds = (ms: number): string => {
     // Calculate hours, minutes, seconds, and milliseconds
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -83,7 +81,6 @@ export const formatMilliseconds = (ms: number): string => {
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
 };
 
-// todo: GH Issue #69
 export const formatBytes = (bytes: number): string => {
     if (bytes === 0) return '0B';
 

@@ -101,10 +101,33 @@ export const addListenersToIpc = (ipcMain: Electron.IpcMain) => {
             return;
         }
 
-        const request = JSON.parse(d[0]) as ProcessingRequest;
+        const request: object = JSON.parse(d[0]);
+
+        if (!isValidPipelineMessage(request)) {
+            output.error('Invalid pipeline message');
+            return;
+        }
+
         runPipelineForFiles(request);
         output.log(`Run pipeline ${request.pipeline.name} w/ ${request.filePaths.length} files`);
     });
 
     ipcMain.on(IpcMessageType.clientMessage, (_e, d: string[]) => handleClientMessage(d[0]));
+};
+
+const isValidPipelineMessage = (msg: object): msg is ProcessingRequest => {
+    if (!msg) return false;
+
+    try {
+        const parsed = msg as ProcessingRequest;
+
+        if (!parsed.pipeline || !parsed.filePaths) return false;
+        if (parsed.filePaths.length === 0) return false;
+        if (typeof parsed.pipeline.name !== 'string') return false;
+        if (!Array.isArray(parsed.pipeline.processingModules)) return false;
+
+        return true;
+    } catch {
+        return false;
+    }
 };
