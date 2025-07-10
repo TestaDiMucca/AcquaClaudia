@@ -8,7 +8,7 @@ import { watch } from 'vue';
 import { useQuasar } from 'quasar'
 import StatsWrapper from './Subsections/StatsWrapper.vue';
 
-const handleChangeCardStyle = store.setCardStyles;
+const handleChangeCardStyle = store.setAppSetting.bind(null, 'cardStyle');
 const $q = useQuasar();
 
 watch(() => store.state.settings.darkMode, () => {

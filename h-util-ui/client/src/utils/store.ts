@@ -8,6 +8,10 @@ import { models } from 'src/data/models';
 export type AppSettings = {
     cardStyle: CardStyles;
     darkMode: boolean;
+} & AppFunctionalSettings;
+
+export type AppFunctionalSettings = {
+    scanHiddenFiles?: boolean;
 };
 
 export type VueStore = {
@@ -54,6 +58,10 @@ const setCardStyles = (cardStyle: CardStyles) => {
     state.settings.cardStyle = cardStyle;
 };
 
+const setAppSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
+    state.settings[key] = value;
+};
+
 const toggleDarkMode = () => {
     state.settings.darkMode = !state.settings.darkMode;
 };
@@ -67,7 +75,7 @@ export default {
     addLog,
     syncPipelineDataFromStorage,
     toggleDarkMode,
-    setCardStyles,
+    setAppSetting,
     setAqueducts,
     setAllPipelines,
     setSelectedPipeline,
