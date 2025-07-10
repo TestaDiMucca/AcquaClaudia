@@ -8,6 +8,7 @@ import { IpcMessageType } from '@shared/common.constants';
 import AqueductItem from './AqueductItem.vue';
 import { models } from 'src/data/models';
 import { toRaw } from 'vue';
+import store from '@utils/store';
 
 type Props = {
   aqueducts: Aqueduct[] | null;
@@ -24,7 +25,8 @@ const emit = defineEmits<{
 const handleRun = (aqueduct: Aqueduct) => {
   getIpcRenderer().invoke<AqueductMessage>(IpcMessageType.aqueducts, {
     type: 'run',
-    aqueduct: toRaw(aqueduct)
+    aqueduct: toRaw(aqueduct),
+    appSettings: toRaw(store.state.settings),
   })
 }
 

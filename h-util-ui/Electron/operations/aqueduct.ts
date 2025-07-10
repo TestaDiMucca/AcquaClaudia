@@ -13,7 +13,7 @@ export const handleAqueductMessage = async (message: AqueductMessage) => {
             /** @deprecated */
             return;
         case 'run':
-            const { aqueduct } = message;
+            const { aqueduct, appSettings } = message;
 
             const response = await sendRendererMessage({
                 type: 'requestPipeline',
@@ -31,7 +31,7 @@ export const handleAqueductMessage = async (message: AqueductMessage) => {
                     const filePaths = await Promise.all(
                         dirContents.map(async (file) => {
                             // Ignore files that are in the ignore list or AppleDouble files
-                            if (IGNORE_FILES.has(file) || file.startsWith('._')) {
+                            if ((IGNORE_FILES.has(file) || file.startsWith('._')) && !appSettings?.scanHiddenFiles) {
                                 return null;
                             }
 

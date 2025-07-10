@@ -130,6 +130,7 @@ export type SpawnedTask = {
 export type ProcessingRequest = {
     pipeline: Pipeline;
     filePaths: string[];
+    appSettings?: AppFunctionalSettings;
 };
 
 /** Data packages sent to main to test a module */
@@ -189,6 +190,7 @@ export type AqueductMessage =
     | {
           type: 'run';
           aqueduct: Aqueduct;
+          appSettings?: AppFunctionalSettings;
       };
 
 export type AqueductLoadResponse = {
@@ -238,3 +240,7 @@ export type RendererMessagePayload =
           type: 'log';
           message: string;
       };
+
+export type AppFunctionalSettings = {
+    scanHiddenFiles?: boolean;
+};

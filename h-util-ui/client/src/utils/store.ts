@@ -1,14 +1,14 @@
 import { reactive } from 'vue';
 
 import { Pipeline, TaskQueue } from './types';
-import { Aqueduct } from '@shared/common.types';
+import { AppFunctionalSettings, Aqueduct } from '@shared/common.types';
 import { CardStyles } from 'src/components/Pipelines/pipelineGallery.helpers';
 import { models } from 'src/data/models';
 
 export type AppSettings = {
     cardStyle: CardStyles;
     darkMode: boolean;
-};
+} & AppFunctionalSettings;
 
 export type VueStore = {
     pipelines: Record<string, Pipeline>;
@@ -50,8 +50,8 @@ const setAqueducts = (aqueducts: Aqueduct[]) => {
     state.aqueducts = aqueducts;
 };
 
-const setCardStyles = (cardStyle: CardStyles) => {
-    state.settings.cardStyle = cardStyle;
+const setAppSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
+    state.settings[key] = value;
 };
 
 const toggleDarkMode = () => {
@@ -67,7 +67,7 @@ export default {
     addLog,
     syncPipelineDataFromStorage,
     toggleDarkMode,
-    setCardStyles,
+    setAppSetting,
     setAqueducts,
     setAllPipelines,
     setSelectedPipeline,

@@ -8,7 +8,8 @@ import { watch } from 'vue';
 import { useQuasar } from 'quasar'
 import StatsWrapper from './Subsections/StatsWrapper.vue';
 
-const handleChangeCardStyle = store.setCardStyles;
+const handleChangeCardStyle = store.setAppSetting.bind(null, 'cardStyle');
+const handleChangeScanHiddenFiles = store.setAppSetting.bind(null, 'scanHiddenFiles');
 const $q = useQuasar();
 
 watch(() => store.state.settings.darkMode, () => {
@@ -33,6 +34,8 @@ watch(() => store.state.settings.darkMode, () => {
               :options="Object.values(CardStyles)" @update:model-value="handleChangeCardStyle" label="Card style"
               :hide-dropdown-icon="true" />
 
+            <q-toggle :model-value="store.state.settings.scanHiddenFiles"
+              @update:model-value="handleChangeScanHiddenFiles" label="Scan hidden files" />
             <q-toggle :model-value="store.state.settings.darkMode" @update:model-value="store.toggleDarkMode"
               label="Dark mode" />
           </template>
