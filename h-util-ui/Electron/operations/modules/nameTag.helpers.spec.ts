@@ -68,6 +68,11 @@ describe('fileNameSafeTitleReplace', () => {
             metadataTitle: '【笑谈广州话】粤语拼音 — 九声六调 第二集',
             expected: '【笑谈广州话】粤语拼音 — 九声六调 第二集 - 2017-10-03.txt',
         },
+        {
+            filename: 'AI coders think they’re 20_ faster — but they’re actually 19_ slower - 2025-07-11',
+            metadataTitle: 'AI coders think they’re 20% faster — but they’re actually 19% slower',
+            expected: 'AI coders think they’re 20% faster — but they’re actually 19% slower - 2025-07-11',
+        },
     ];
 
     it.each(bugCases)('bug case: $expected', ({ filename, metadataTitle, expected }) => {
