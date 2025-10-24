@@ -3,12 +3,13 @@ import { getIpcRenderer } from '@utils/helpers';
 
 type Props = {
   value: string | null;
+  index?: number;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  (e: 'select', d: string): void;
+  (e: 'select', d: string, index?: number): void;
 }>();
 
 const handleDirPrompt = async () => {
@@ -16,7 +17,7 @@ const handleDirPrompt = async () => {
 
   if (!folder) return;
 
-  emit('select', folder);
+  emit('select', folder, props.index);
 }
 </script>
 

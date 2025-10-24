@@ -38,8 +38,10 @@ const onPipelineSelected = (id: string) => {
   localAqueduct.value.pipelineId = id;
 }
 
-const onDirSelected = (index: number) => (folder: string) => {
-  localAqueduct.value.directories[index] = folder;
+const onDirSelected = (folder: string, index?: number) => {
+  if (index !== undefined) {
+    localAqueduct.value.directories[index] = folder;
+  }
 }
 </script>
 
@@ -59,11 +61,12 @@ const onDirSelected = (index: number) => (folder: string) => {
 
       <div class="directories card-border">
         <div v-for="(_, index) in localAqueduct.directories" :key="index" class="directory-row">
-          <DirectoryPicker @select="onDirSelected(index)" :value="localAqueduct.directories[index]" />
+          <DirectoryPicker @select="onDirSelected" :index="index" :value="localAqueduct.directories[index]" />
 
-          <Delete @click="removeDirectory(index)" class="remove-btn icon-button" :size="18" />
+          <Delete v-if="localAqueduct.directories.length > 1" @click="removeDirectory(index)"
+            class="remove-btn icon-button" :size="18" />
         </div>
-        <button @click="addDirectory">Add directory</button>
+        <button v-if="localAqueduct.directories.every(dir => dir !== '')" @click="addDirectory">Add directory</button>
       </div>
     </template>
     <template #footer>
