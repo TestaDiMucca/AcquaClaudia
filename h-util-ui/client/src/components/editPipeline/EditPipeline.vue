@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { NodeProps, VueFlow } from '@vue-flow/core';
 import { Background } from '@vue-flow/background'
 
-import { PageViews, ProcessingModule, ProcessingModuleType } from '@utils/types';
+import { PageViews, ProcessingModule, ProcessingModuleType, isBranchingModule } from '@utils/types';
 import store from '@utils/store';
 import { DEFAULT_RANKING } from '@utils/constants';
 import { navigateTo } from '@utils/helpers';
@@ -68,10 +68,14 @@ const handleNewModules = (fromModuleId?: string, branchIndex?: number) => {
 
   if (fromModuleId) {
     const sourceModule = getModuleIndexById(fromModuleId);
+    const moduleData = pipelineModules.value[sourceModule];
 
-    if (pipelineModules.value[sourceModule]?.type !== ProcessingModuleType.branch) pipelineModules.value[sourceModule].nextModule = newModuleId
-    else if (pipelineModules.value[sourceModule]?.type === ProcessingModuleType.branch && typeof branchIndex === 'number') {
-      pipelineModules.value[sourceModule].branches[branchIndex].targetModule = newModuleId;
+    if (!moduleData) return;
+
+    if (!isBranchingModule(moduleData)) {
+      moduleData.nextModule = newModuleId;
+    } else if (typeof branchIndex === 'number') {
+      moduleData.branches[branchIndex].targetModule = newModuleId;
     }
   }
   pipelineModules.value.push(getDefaultModule(newModuleId))

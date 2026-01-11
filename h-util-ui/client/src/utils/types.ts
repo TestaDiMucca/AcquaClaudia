@@ -8,6 +8,7 @@ export type {
 } from '../../../common/common.types';
 
 export { ProcessingModuleType } from '../../../common/common.types';
+export { isBranchingModule } from '../../../common/common.utils';
 
 export enum PageViews {
     Home = '/',
