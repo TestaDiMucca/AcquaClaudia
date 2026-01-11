@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import { Quasar } from 'quasar';
+import { Quasar, type QuasarPluginOptions } from 'quasar';
 import Notify from 'quasar/src/plugins/notify/Notify';
 
 import './variables.css';
@@ -15,7 +15,7 @@ import '@vue-flow/core/dist/theme-default.css';
 
 const myApp = createApp(App);
 
-myApp.use(Quasar, {
+const quasarOptions = {
     plugins: {
         Notify,
     },
@@ -37,6 +37,8 @@ myApp.use(Quasar, {
             warning: '#F2C037',
         },
     },
-});
+} as unknown as Partial<QuasarPluginOptions>;
+
+myApp.use(Quasar, quasarOptions);
 
 myApp.mount('#app');

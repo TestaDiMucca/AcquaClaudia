@@ -8,8 +8,8 @@ import { watch } from 'vue';
 import { useQuasar } from 'quasar'
 import StatsWrapper from './Subsections/StatsWrapper.vue';
 
-const handleChangeCardStyle = store.setAppSetting.bind(null, 'cardStyle');
-const handleChangeScanHiddenFiles = store.setAppSetting.bind(null, 'scanHiddenFiles');
+const handleChangeCardStyle = (value: CardStyles) => store.setAppSetting('cardStyle', value);
+const handleChangeScanHiddenFiles = (value: boolean) => store.setAppSetting('scanHiddenFiles', value);
 const $q = useQuasar();
 
 watch(() => store.state.settings.darkMode, () => {
