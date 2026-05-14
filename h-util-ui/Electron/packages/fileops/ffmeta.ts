@@ -2,16 +2,20 @@ import * as ffmpeg from 'fluent-ffmpeg';
 import { getTempName } from '.';
 import { detachPromise } from '@common/common';
 import { unlink } from 'fs/promises';
-import { isDev } from '../../config';
+import { createModuleBinaryLoader, resolveBinaryPath } from './binaryPathResolver';
 const ffmpegCaller = require('fluent-ffmpeg');
 
-const ffprobePath = require('@ffprobe-installer/ffprobe').path;
+const ffprobePath = resolveBinaryPath({
+    candidateLoaders: [createModuleBinaryLoader('@ffprobe-installer/ffprobe', (loadedModule) => loadedModule?.path)],
+    fallbackCommand: 'ffprobe',
+});
 ffmpeg.setFfprobePath(ffprobePath);
 
-if (!isDev) {
-    const ffmpegPath = require('ffmpeg-static').replace('app.asar', 'app.asar.unpacked');
-    ffmpeg.setFfmpegPath(ffmpegPath);
-}
+const ffmpegPath = resolveBinaryPath({
+    candidateLoaders: [createModuleBinaryLoader('ffmpeg-static', (loadedModule) => loadedModule)],
+    fallbackCommand: 'ffmpeg',
+});
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 /**
  * Get hash of existing metadata in a media obj

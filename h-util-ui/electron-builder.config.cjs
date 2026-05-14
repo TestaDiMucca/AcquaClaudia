@@ -34,9 +34,9 @@ module.exports = {
     },
     files: ['dist/**/*'],
     asarUnpack: [
-        'node_modules/ffmpeg-static/bin/${os}/${arch}/ffmpeg',
-        'node_modules/ffmpeg-static/index.js',
-        'node_modules/ffmpeg-static/package.json',
+        'node_modules/ffmpeg-static/ffmpeg*',
+        'node_modules/ffmpeg-static/bin/${os}/${arch}/ffmpeg*',
+        'node_modules/@ffprobe-installer/*/ffprobe*',
     ],
     extraResources: ['defaults/**/*'],
     directories: {
