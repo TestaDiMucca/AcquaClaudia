@@ -7,28 +7,26 @@
   "author": "",
   "private": true,
   "scripts": {
-    "build": "tsc && yarn build:front",
+    "build": "npm run build:electron && npm run build:front",
+    "build:electron": "tsc",
     "test": "jest",
-    "watch": "nodemon --exec yarn serve:electron",
+    "watch": "nodemon --exec \"npm run serve:electron\"",
     "dev": "npm start",
-    "start": "yarn nightly:rename && concurrently --names 'CLIENT-KUN,PACKARINO' --prefix-colors 'red,yellow' -k \"yarn serve:front\" \"yarn watch\"",
-    "front:setup": "cd client && yarn",
-    "electron:setup": "yarn",
-    "setup": "yarn front:setup && yarn electron:setup",
-    "serve:front": "cd client && yarn dev",
-    "serve:electron": "set ELECTRON_ENABLE_LOGGING=1 && set APP_IS_NIGHTLY=yes && set APP_IS_DEV=yes && yarn build &&  wait-on tcp:3000 && APP_IS_DEV=yes electron --inspect=9229 .",
-    "build:front": "cd client && yarn build",
-    "electron:build": "yarn build",
-    "electron:builder": "electron-builder",
-    "electron:builder:win": "electron-builder build --win --x64",
-    "app:build:base": "yarn prod:rename && yarn build:front && yarn electron:build",
-    "app:build": "yarn app:build:base && yarn electron:builder",
-    "app:build:win": "yarn app:build:base && yarn electron:builder:win",
-    "app:build:nightly": "set APP_IS_NIGHTLY=yes && set APP_IS_DEV=no && yarn nightly:rename && yarn build:front && yarn electron:build && yarn electron:builder",
-    "nightly:rename": "json -I -f package.json -e \"this.name='h-util-ui'\" && json -I -f package.json -e \"this.build.productName='H-Util UI Nightly'\" && json -I -f package.json -e \"this.build.appId='com.official-h-util-ui.app'\"",
-    "prod:rename": "json -I -f package.json -e \"this.name='h-util-ui'\" && json -I -f package.json -e \"this.build.productName='H-Util UI'\" && json -I -f package.json -e \"this.build.appId='com.official-h-util-ui.app'\"",
-    "electron-rebuild": "./node_modules/.bin/electron-rebuild",
-    "postinstall": "electron-builder install-app-deps",
+    "start": "concurrently --names \"CLIENT-KUN,PACKARINO\" --prefix-colors \"red,yellow\" -k \"npm run serve:front\" \"npm run watch\"",
+    "front:setup": "npm install --prefix client",
+    "electron:setup": "npm install",
+    "setup": "npm run front:setup && npm run electron:setup",
+    "serve:front": "npm run dev --prefix client -- --host 127.0.0.1 --port 3000",
+    "serve:electron": "node ./scripts/serve-electron.cjs",
+    "build:front": "npm run build --prefix client",
+    "electron:build": "npm run build",
+    "electron:builder": "npm exec -- electron-builder --config electron-builder.config.cjs",
+    "electron:builder:win": "npm exec -- electron-builder build --win --x64 --config electron-builder.config.cjs",
+    "app:build": "npm run build && npm run electron:builder",
+    "app:build:win": "npm run build && npm run electron:builder:win",
+    "app:build:nightly": "node ./scripts/build-nightly.cjs",
+    "electron-rebuild": "npm exec -- electron-rebuild",
+    "postinstall": "npm exec -- electron-builder install-app-deps",
     "up:win": "up_using_window.cmd",
     "packages:sync": "cd .. && cp ./packages/common/src/* ./h-util-ui/Electron/packages/common/ && cp ./packages/fileops/src/* ./h-util-ui/Electron/packages/fileops/"
   },
@@ -75,47 +73,6 @@
   ],
   "type": "commonjs",
   "repository": "https://github.com/TestaDiMucca/Hoarder-Util",
-  "build": {
-    "appId": "com.official-h-util-ui.app",
-    "productName": "H-Util UI",
-    "copyright": "Copyright © TdM",
-    "mac": {
-      "category": "public.app-category.utilities",
-      "extendInfo": {
-        "NSDocumentsFolderUsageDescription": "H-Util UI needs access to Documents to read and update files you select.",
-        "NSDownloadsFolderUsageDescription": "H-Util UI needs access to Downloads to read and update files you select.",
-        "NSDesktopFolderUsageDescription": "H-Util UI needs access to Desktop to read and update files you select.",
-        "NSRemovableVolumesUsageDescription": "H-Util UI needs access to external drives to read and update files you select.",
-        "NSNetworkVolumesUsageDescription": "H-Util UI needs access to network volumes to read and update files you select."
-      }
-    },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "TdM-JunkWare"
-      }
-    ],
-    "nsis": {
-      "oneClick": true,
-      "allowToChangeInstallationDirectory": false,
-      "deleteAppDataOnUninstall": true
-    },
-    "files": [
-      "dist/**/*"
-    ],
-    "asarUnpack": [
-      "node_modules/ffmpeg-static/bin/${os}/${arch}/ffmpeg",
-      "node_modules/ffmpeg-static/index.js",
-      "node_modules/ffmpeg-static/package.json"
-    ],
-    "extraResources": [
-      "defaults/**/*"
-    ],
-    "directories": {
-      "buildResources": "assets",
-      "output": "dist_electron"
-    }
-  },
   "engines": {
     "npm": ">=10.0.0",
     "node": ">=20.0.0"

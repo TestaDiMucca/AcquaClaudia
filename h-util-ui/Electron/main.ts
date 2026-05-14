@@ -10,7 +10,7 @@ moduleAliases.addAliases({
 
 import { app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain, screen } from 'electron';
 
-import { isDev } from './config';
+import { devServerUrl, isDev } from './config';
 import { appConfig } from './ElectronStore/Configuration';
 import output from './util/output';
 import { handleErrorMessage, registerMainWindow, sendFeLog, sendRendererMessage } from './util/ipc';
@@ -42,7 +42,7 @@ async function createWindow() {
     if (appBounds !== undefined && appBounds !== null) Object.assign(BrowserWindowOptions, appBounds);
     const mainWindow = new BrowserWindow(BrowserWindowOptions);
 
-    if (isDev) await mainWindow.loadURL('http://localhost:3000');
+    if (isDev) await mainWindow.loadURL(devServerUrl);
     else await mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
     if (appBounds !== undefined && appBounds !== null && appBounds.width > width && appBounds.height > height)
