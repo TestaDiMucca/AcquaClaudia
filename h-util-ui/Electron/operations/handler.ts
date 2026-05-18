@@ -11,6 +11,7 @@ import {
 import { ProcessingError } from '@util/errors';
 import { addStat, sendFeLog, updateTaskProgress } from '@util/ipc';
 import { CommonContext, FileOptions, FileWithMeta, ModuleHandler } from '@util/types';
+import output from '@util/output';
 import { addEventLogForReport, fileListToFileOptions } from './handler.helpers';
 import { MODULE_MAP } from './modules/moduleMap';
 import branchingHandler from './modules/branching.handler';
@@ -72,6 +73,7 @@ export const runPipelineForFiles = async (params: ProcessingRequest) => {
     const onDoneMap: OnDoneMap = {};
 
     sendFeLog(`Requested ${pipeline.name} with ${filePaths.length} files`);
+    output.log(`[pipeline] ${pipeline.name} starting with ${filePaths.length} files`);
 
     await withTimer(
         async () => {
@@ -217,6 +219,8 @@ export const runModuleForFile = async <T extends object = {}>({
         const { filter, onDone, handler } = moduleHandler;
         const shouldHandle = filter ? await filter(fileWithMeta.filePath) : true;
 
+        output.log(`[module] ${processingModule.type} on ${fileName}: ${shouldHandle ? 'handle' : 'skip'}`);
+
         /** File doesn't apply for this module, move on */
         if (!shouldHandle && processingModule.options.skipPreviouslyFailed) fileWithMeta.remove = true;
         if (!shouldHandle) return;
@@ -232,6 +236,8 @@ export const runModuleForFile = async <T extends object = {}>({
             },
             moduleDataStores?.[processingModule.id] ?? {},
         );
+
+        output.log(`[module] ${processingModule.type} completed for ${fileName}`);
 
         /** Add to onDone map for final runs */
         if (onDone && onDoneMap && !onDoneMap[processingModule.id]) onDoneMap[processingModule.id] = onDone;

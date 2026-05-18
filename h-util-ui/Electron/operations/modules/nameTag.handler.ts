@@ -9,6 +9,7 @@ import {
     withUTimes,
 } from '@common/fileops';
 import { ModuleHandler } from '@util/types';
+import output from '@util/output';
 import { addEventLogForReport } from '../handler.helpers';
 import { fileNameSafeTitleReplace } from './nameTag.helpers';
 
@@ -34,7 +35,12 @@ const nameTagHandler: ModuleHandler = {
         /** Parsed from filename */
         const parsedTags = parseStringToTags(pattern, removeExt(fileName));
 
-        if (!parsedTags) return;
+        if (!parsedTags) {
+            output.log(`[nameTag] skipped ${fileName}: parse failed for pattern ${pattern}`);
+            return;
+        }
+
+        output.log(`[nameTag] parsed ${fileName}`, JSON.stringify(parsedTags));
 
         await withUTimes(async () => {
             const readTags = (await ffMeta.readTags(filePath)) as TagReturnType;
@@ -42,6 +48,16 @@ const nameTagHandler: ModuleHandler = {
             const unSafeTitleForTag = fileNameSafeTitleReplace(parsedTags.title, existingTitle);
             parsedTags.title = unSafeTitleForTag;
             parsedTags.artist = fileNameSafeTitleReplace(parsedTags.artist, readTags.format?.tags?.artist || '');
+
+            output.log(
+                `[nameTag] writing ${fileName}`,
+                JSON.stringify({
+                    existingTitle,
+                    existingArtist: readTags.format?.tags?.artist || '',
+                    finalTitle: parsedTags.title,
+                    finalArtist: parsedTags.artist,
+                }),
+            );
 
             await ffMeta.writeTags(filePath, { ...parsedTags });
             await replaceFile(filePath, getTempName(filePath));

@@ -18,7 +18,6 @@ const handleExportPipelines = () => {
   if (!data?.pipelines) return;
 
   getIpcRenderer().saveFile(JSON.stringify(data.pipelines));
-
 }
 
 const handleImportPipelines = () => tab.value = View.import;

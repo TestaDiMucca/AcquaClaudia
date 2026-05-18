@@ -4,6 +4,7 @@ import { promises } from '@common/common';
 import { AqueductMessage } from '@shared/common.types';
 import { runPipelineForFiles } from './handler';
 import { sendRendererMessage } from '@util/ipc';
+import output from '@util/output';
 
 const IGNORE_FILES = new Set(['.DS_Store', 'Thumbs.db', 'desktop.ini']);
 
@@ -28,6 +29,7 @@ export const handleAqueductMessage = async (message: AqueductMessage) => {
             await promises.each(directories, async (directory) => {
                 try {
                     const dirContents = await readdir(directory);
+                    output.log(`[aqueduct] ${aqueduct.name} scanning ${directory} (${dirContents.length} entries)`);
                     const filePaths = await Promise.all(
                         dirContents.map(async (file) => {
                             // Ignore files that are in the ignore list or AppleDouble files
@@ -45,6 +47,9 @@ export const handleAqueductMessage = async (message: AqueductMessage) => {
                         pipeline,
                         filePaths: filePaths.filter((path): path is string => path !== null),
                     });
+                    output.log(
+                        `[aqueduct] ${aqueduct.name} detected ${filePaths.filter((path): path is string => path !== null).length} files in ${directory}`,
+                    );
                 } catch (e) {
                     console.error(e);
                 }
