@@ -79,4 +79,21 @@ describe('binaryPathResolver', () => {
 
         expect(result).toBe('ffprobe');
     });
+
+    test('searches ancestor directories so workspace binaries can be found deterministically', () => {
+        const { getModuleSearchRoots } = loadResolver();
+
+        const result = getModuleSearchRoots('/repo/h-util-ui/dist/Electron/packages/fileops');
+
+        expect(result).toEqual(
+            expect.arrayContaining([
+                '/repo/h-util-ui/dist/Electron/packages/fileops',
+                '/repo/h-util-ui/dist/Electron/packages',
+                '/repo/h-util-ui/dist/Electron',
+                '/repo/h-util-ui/dist',
+                '/repo/h-util-ui',
+                '/repo',
+            ]),
+        );
+    });
 });

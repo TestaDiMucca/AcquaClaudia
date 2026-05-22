@@ -2,20 +2,25 @@ import * as ffmpeg from 'fluent-ffmpeg';
 import { getTempName } from '.';
 import { detachPromise } from '@common/common';
 import { unlink } from 'fs/promises';
-import { createModuleBinaryLoader, resolveBinaryPath } from './binaryPathResolver';
+import { createEnvBinaryLoader, createModuleBinaryLoader, resolveBinaryPath } from './binaryPathResolver';
 const ffmpegCaller = require('fluent-ffmpeg');
 
 const ffprobePath = resolveBinaryPath({
-    candidateLoaders: [createModuleBinaryLoader('@ffprobe-installer/ffprobe', (loadedModule) => loadedModule?.path)],
+    candidateLoaders: [
+        createEnvBinaryLoader('FFPROBE_BIN'),
+        createModuleBinaryLoader('@ffprobe-installer/ffprobe', (loadedModule) => loadedModule?.path),
+    ],
     fallbackCommand: 'ffprobe',
 });
 ffmpeg.setFfprobePath(ffprobePath);
+console.info(`[ffmeta] using ffprobe: ${ffprobePath}${ffprobePath === 'ffprobe' ? ' (PATH fallback)' : ''}`);
 
 const ffmpegPath = resolveBinaryPath({
-    candidateLoaders: [createModuleBinaryLoader('ffmpeg-static', (loadedModule) => loadedModule)],
+    candidateLoaders: [createEnvBinaryLoader('FFMPEG_BIN'), createModuleBinaryLoader('ffmpeg-static', (loadedModule) => loadedModule)],
     fallbackCommand: 'ffmpeg',
 });
 ffmpeg.setFfmpegPath(ffmpegPath);
+console.info(`[ffmeta] using ffmpeg: ${ffmpegPath}${ffmpegPath === 'ffmpeg' ? ' (PATH fallback)' : ''}`);
 
 /**
  * Get hash of existing metadata in a media obj
@@ -47,9 +52,7 @@ export const writeTags = async (
         let totalTime: number;
 
         ffmpegCaller(filePath)
-            .outputOptions(...meta)
-            .audioCodec('copy')
-            .videoCodec('copy')
+            .outputOptions('-map', '0', '-c', 'copy', ...meta)
             .output(getTempName(filePath))
             .on('codecData', (data: any) => {
                 totalTime = parseInt(data.duration.replace(/:/g, ''));

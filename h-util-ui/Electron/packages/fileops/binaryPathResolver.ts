@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 type CandidateLoader = () => string | null | undefined;
 
@@ -52,18 +53,36 @@ export const resolveBinaryPath = (
     return fallbackCommand;
 };
 
-const getModuleSearchRoots = () => {
-    const resourcesPath = (process as NodeJS.Process & { resourcesPath?: string }).resourcesPath;
+const collectAncestorDirs = (startDir: string) => {
+    const roots: string[] = [];
+    let currentDir = path.resolve(startDir);
 
-    return [__dirname, process.cwd(), resourcesPath].filter((value): value is string => Boolean(value));
+    while (true) {
+        roots.push(currentDir);
+        const parentDir = path.dirname(currentDir);
+        if (parentDir === currentDir) break;
+        currentDir = parentDir;
+    }
+
+    return roots;
 };
+
+export const getModuleSearchRoots = (
+    startDir = __dirname,
+    resourcesPath = (process as NodeJS.Process & { resourcesPath?: string }).resourcesPath,
+) => {
+    const roots = [...collectAncestorDirs(startDir), ...(resourcesPath ? collectAncestorDirs(resourcesPath) : [])];
+
+    return [...new Set(roots)];
+};
+
+export const createEnvBinaryLoader = (envVar: string): CandidateLoader => () => process.env[envVar] ?? undefined;
 
 export const createModuleBinaryLoader = (
     request: string,
     selectBinaryPath: (loadedModule: any) => string | undefined,
+    searchRoots = getModuleSearchRoots(),
 ): CandidateLoader => {
-    const searchRoots = getModuleSearchRoots();
-
     return () => {
         for (const searchRoot of searchRoots) {
             try {
@@ -71,7 +90,12 @@ export const createModuleBinaryLoader = (
                 const loadedModule = require(resolvedModulePath);
                 const binaryPath = selectBinaryPath(loadedModule);
 
-                if (binaryPath) return binaryPath;
+                if (!binaryPath) continue;
+
+                const normalizedBinaryPath = normalizeBinaryPath(binaryPath);
+                if (!fs.existsSync(normalizedBinaryPath)) continue;
+
+                return normalizedBinaryPath;
             } catch {
                 continue;
             }
